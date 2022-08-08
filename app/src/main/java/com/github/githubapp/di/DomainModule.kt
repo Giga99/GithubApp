@@ -2,20 +2,38 @@ package com.github.githubapp.di
 
 import com.github.githubapp.data.datasource.ReposRepositoryImpl
 import com.github.githubapp.data.datasource.UsersRepositoryImpl
+import com.github.githubapp.data.local.GithubDatabase
+import com.github.githubapp.data.remote.services.RepoApiService
+import com.github.githubapp.data.remote.services.UsersApiService
 import com.github.githubapp.domain.repos.ReposRepository
 import com.github.githubapp.domain.repos.UsersRepository
-import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class DomainModule {
+object DomainModule {
 
-    @Binds
-    abstract fun bindUsersRepository(usersRepositoryImpl: UsersRepositoryImpl): UsersRepository
+    @Singleton
+    @Provides
+    fun providesUsersRepository(
+        usersApiService: UsersApiService,
+        githubDatabase: GithubDatabase
+    ): UsersRepository = UsersRepositoryImpl(
+        usersApiService = usersApiService,
+        reposDao = githubDatabase.reposDao
+    )
 
-    @Binds
-    abstract fun bindReposRepository(reposRepositoryImpl: ReposRepositoryImpl): ReposRepository
+    @Singleton
+    @Provides
+    fun providesReposRepository(
+        repoApiService: RepoApiService,
+        githubDatabase: GithubDatabase
+    ): ReposRepository = ReposRepositoryImpl(
+        repoApiService = repoApiService,
+        reposDao = githubDatabase.reposDao
+    )
 }

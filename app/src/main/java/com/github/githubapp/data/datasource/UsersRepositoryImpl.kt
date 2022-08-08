@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 class UsersRepositoryImpl @Inject constructor(
@@ -18,8 +19,12 @@ class UsersRepositoryImpl @Inject constructor(
 ) : UsersRepository {
 
     override suspend fun fetchUserRepositories(userName: String) = withContext(Dispatchers.IO) {
-        val userRepos = usersApiService.getUserRepos(userName).map { it.toEntity() }
-        reposDao.insertRepos(userRepos)
+        try {
+            val response = usersApiService.getUserRepos(userName).body() ?: emptyList()
+            reposDao.insertRepos(response.map { it.toEntity() })
+        } catch (e: Exception) {
+            Timber.e(e)
+        }
     }
 
     override suspend fun getUserRepositories(userName: String): Flow<List<RepoModel>> =

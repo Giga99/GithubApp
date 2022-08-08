@@ -15,8 +15,8 @@ class GetRepoDetailsUseCase @Inject constructor(
     suspend operator fun invoke(ownerName: String, repoName: String): Flow<RepoDetailsModel> =
         withContext(Dispatchers.IO) {
             val repoFlow = reposRepository.getRepo(ownerName, repoName)
-            val repoEvents = reposRepository.getRepoEvents(ownerName, repoName)
+            val repoEvent = reposRepository.getRepoEvents(ownerName, repoName).data?.first()
 
-            repoFlow.map { RepoDetailsModel(it, repoEvents.first()) }
+            repoFlow.map { RepoDetailsModel(it, repoEvent) }
         }
 }
