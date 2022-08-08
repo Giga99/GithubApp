@@ -1,6 +1,6 @@
 package com.github.githubapp.data.remote.adapters
 
-import com.github.githubapp.data.remote.responses.RepoEventTypeEnum
+import com.github.githubapp.data.common.enums.RepoEventTypeEnum
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonReader
 import com.squareup.moshi.JsonWriter

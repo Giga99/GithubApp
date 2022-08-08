@@ -1,6 +1,9 @@
 package com.github.githubapp.di
 
+import android.app.Application
+import androidx.room.Room
 import com.github.githubapp.common.ApiUrl
+import com.github.githubapp.data.local.GithubDatabase
 import com.github.githubapp.data.remote.services.RepoApiService
 import com.github.githubapp.data.remote.services.UsersApiService
 import com.squareup.moshi.JsonAdapter
@@ -52,4 +55,13 @@ object DataModule {
     fun provideRepoApiService(
         retrofit: Retrofit
     ): RepoApiService = retrofit.create(RepoApiService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideGithubDatabase(app: Application): GithubDatabase =
+        Room.databaseBuilder(
+            app,
+            GithubDatabase::class.java,
+            "github_db"
+        ).build()
 }
