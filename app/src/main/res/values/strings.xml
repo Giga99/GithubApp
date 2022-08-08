@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">GithubApp</string>
+
+    <string name="repo_event_type_watch_event">Watch Event</string>
+    <string name="repo_event_type_issue_comment_event">Issue Comment Event</string>
+    <string name="repo_event_type_fork_event">Fork Event</string>
+    <string name="repo_event_type_issues_event">Issues Event</string>
+    <string name="repo_event_type_unknown">Unknown</string>
 </resources>
