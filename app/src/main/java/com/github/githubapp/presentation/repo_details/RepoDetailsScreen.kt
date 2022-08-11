@@ -2,10 +2,7 @@ package com.github.githubapp.presentation.repo_details
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -20,6 +17,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.github.githubapp.R
 import com.github.githubapp.common.Destinations
+import com.github.githubapp.common.Result
+import com.github.githubapp.domain.models.RepoDetailsModel
 import com.github.githubapp.domain.models.RepoEventActorModel
 import com.github.githubapp.domain.models.RepoEventModel
 import com.github.githubapp.domain.models.RepoOwnerModel
@@ -70,29 +69,52 @@ fun RepoDetailsScreen(
             Box(modifier = Modifier.width(0.dp))
         }
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.size_32)))
-        viewState.repoDetailsModel?.let { repoDetails ->
-            Text(
-                text = repoDetails.repoModel.name,
-                style = MaterialTheme.typography.h4,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
-            )
-            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.size_32)))
-            Text(
-                text = repoDetails.repoModel.url,
-                style = MaterialTheme.typography.body1,
-                modifier = Modifier.clickable {
-                    repoDetailsViewModel.onEvent(RepoDetailsEvent.UrlClicked(repoDetails.repoModel.url))
+        when (viewState.repoDetailsModel) {
+            is Result.Success -> {
+                RepoDetails(repoDetails = viewState.repoDetailsModel.data) {
+                    repoDetailsViewModel.onEvent(RepoDetailsEvent.UrlClicked(it))
                 }
-            )
-            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.size_32)))
-            RepoOwner(repoDetails.repoModel.repoOwner) { url ->
-                repoDetailsViewModel.onEvent(RepoDetailsEvent.UrlClicked(url))
             }
-            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.size_32)))
-            LastEvent(repoEventModel = repoDetails.repoEventModel) { url ->
-                repoDetailsViewModel.onEvent(RepoDetailsEvent.UrlClicked(url))
+            is Result.Error -> {
+                RepoDetailsError(message = viewState.repoDetailsModel.message ?: "")
             }
+            is Result.Loading -> {
+                RepoDetailsLoading()
+            }
+        }
+    }
+}
+
+@Composable
+fun RepoDetails(
+    repoDetails: RepoDetailsModel?,
+    onUrlClicked: (String) -> Unit
+) {
+    if (repoDetails == null) {
+        Text(
+            text = stringResource(R.string.no_data_for_repo),
+            style = MaterialTheme.typography.h6
+        )
+    } else {
+        Text(
+            text = repoDetails.repoModel.name,
+            style = MaterialTheme.typography.h4,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.size_32)))
+        Text(
+            text = repoDetails.repoModel.url,
+            style = MaterialTheme.typography.body1,
+            modifier = Modifier.clickable { onUrlClicked(repoDetails.repoModel.url) }
+        )
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.size_32)))
+        RepoOwner(repoDetails.repoModel.repoOwner) { url ->
+            onUrlClicked(url)
+        }
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.size_32)))
+        LastEvent(repoEventModel = repoDetails.repoEventModel) { url ->
+            onUrlClicked(url)
         }
     }
 }
@@ -175,5 +197,25 @@ fun LastEventActor(
         text = repoEventActorModel.url,
         style = MaterialTheme.typography.body1,
         modifier = Modifier.clickable { urlClicked(repoEventActorModel.url) }
+    )
+}
+
+@Composable
+private fun RepoDetailsError(
+    message: String
+) {
+    Text(
+        text = message,
+        style = MaterialTheme.typography.h6,
+        color = MaterialTheme.colors.error
+    )
+}
+
+@Composable
+private fun ColumnScope.RepoDetailsLoading() {
+    CircularProgressIndicator(
+        modifier = Modifier
+            .padding(dimensionResource(R.dimen.size_16))
+            .align(Alignment.CenterHorizontally)
     )
 }

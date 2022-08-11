@@ -1,5 +1,6 @@
 package com.github.githubapp.presentation.repo_details
 
+import com.github.githubapp.common.Result
 import com.github.githubapp.domain.models.RepoDetailsModel
 
 sealed class RepoDetailsEvent {
@@ -13,5 +14,5 @@ sealed class RepoDetailsSideEffect {
 }
 
 data class RepoDetailsViewState(
-    val repoDetailsModel: RepoDetailsModel? = null
+    val repoDetailsModel: Result<RepoDetailsModel> = Result.Loading()
 )

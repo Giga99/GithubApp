@@ -18,4 +18,6 @@
     <string name="event_type">Type: </string>
     <string name="last_event_actor">Actor</string>
     <string name="no_events">This repository doesn`t have any event</string>
+
+    <string name="no_data_for_repo">No data for this repo!</string>
 </resources>
