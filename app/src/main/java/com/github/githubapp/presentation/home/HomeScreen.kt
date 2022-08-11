@@ -5,13 +5,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -23,13 +21,19 @@ import com.github.githubapp.R
 import com.github.githubapp.common.Destinations
 import com.github.githubapp.common.Result
 import com.github.githubapp.domain.models.RepoModel
+import com.google.accompanist.pager.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun HomeScreen(
     navController: NavController,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val viewState = homeViewModel.viewState.collectAsState().value
+    val pagerState = rememberPagerState()
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(homeViewModel.sideEffects) {
         homeViewModel.sideEffects.collect { sideEffect ->
@@ -58,17 +62,74 @@ fun HomeScreen(
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.size_32)))
-        when (viewState.reposList) {
-            is Result.Success -> {
-                HomeScreenRepos(repos = viewState.reposList.data) {
-                    homeViewModel.onEvent(HomeEvent.RepoClicked(it))
-                }
+        HorizontalTabs(
+            items = viewState.tabs,
+            pagerState = pagerState,
+            scope = coroutineScope
+        )
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.size_16)))
+        HorizontalPager(
+            count = viewState.reposList.size,
+            state = pagerState,
+            modifier = Modifier.weight(1f)
+        ) { currentPage ->
+            ReposPage(reposList = viewState.reposList[currentPage]) {
+                homeViewModel.onEvent(HomeEvent.RepoClicked(it))
             }
-            is Result.Error -> {
-                HomeScreenReposError(message = viewState.reposList.message ?: "")
-            }
-            is Result.Loading -> {
-                HomeScreenReposLoading()
+        }
+
+    }
+}
+
+@Composable
+private fun ColumnScope.ReposPage(
+    reposList: Result<List<RepoModel>>,
+    onRepoClicked: (RepoModel) -> Unit
+) {
+    when (reposList) {
+        is Result.Success -> {
+            HomeScreenRepos(
+                repos = reposList.data,
+                onRepoClicked = onRepoClicked
+            )
+        }
+        is Result.Error -> {
+            HomeScreenReposError(message = reposList.message ?: "")
+        }
+        is Result.Loading -> {
+            HomeScreenReposLoading()
+        }
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun HorizontalTabs(
+    items: List<String>,
+    pagerState: PagerState,
+    scope: CoroutineScope
+) {
+    TabRow(
+        selectedTabIndex = pagerState.currentPage,
+        indicator = { tabPositions ->
+            TabRowDefaults.Indicator(
+                modifier = Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+            )
+        },
+        backgroundColor = MaterialTheme.colors.background
+    ) {
+        items.forEachIndexed { index, item ->
+            Tab(
+                selected = pagerState.currentPage == index,
+                onClick = {
+                    scope.launch {
+                        pagerState.animateScrollToPage(page = index)
+                    }
+                },
+                selectedContentColor = MaterialTheme.colors.primary,
+                unselectedContentColor = MaterialTheme.colors.primaryVariant
+            ) {
+                Text(text = item)
             }
         }
     }

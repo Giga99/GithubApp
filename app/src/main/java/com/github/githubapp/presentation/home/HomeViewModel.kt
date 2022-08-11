@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getAllReposUseCase: GetAllReposUseCase
+    private val getAllReposUseCase: GetAllReposUseCase,
 ) : BaseViewModel<HomeViewState, HomeEvent, HomeSideEffect>(HomeViewState()) {
 
     init {
