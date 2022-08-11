@@ -9,14 +9,17 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.github.githubapp.R
+import com.github.githubapp.common.Destinations
 import com.github.githubapp.domain.models.RepoEventActorModel
 import com.github.githubapp.domain.models.RepoEventModel
 import com.github.githubapp.domain.models.RepoOwnerModel
@@ -32,6 +35,11 @@ fun RepoDetailsScreen(
         repoDetailsViewModel.sideEffects.collect { sideEffect ->
             when (sideEffect) {
                 RepoDetailsSideEffect.NavigateBack -> navController.navigateUp()
+                is RepoDetailsSideEffect.NavigateToWebView -> navController.navigate(
+                    Destinations.WebViewScreen(
+                        sideEffect.url
+                    )
+                )
             }
         }
     }
@@ -41,7 +49,11 @@ fun RepoDetailsScreen(
             .fillMaxSize()
             .padding(dimensionResource(R.dimen.size_16))
     ) {
-        Row(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             IconButton(
                 modifier = Modifier.size(dimensionResource(R.dimen.size_32)),
                 onClick = { repoDetailsViewModel.onEvent(RepoDetailsEvent.BackButtonClicked) }
@@ -51,6 +63,11 @@ fun RepoDetailsScreen(
                     contentDescription = stringResource(R.string.back_button_description)
                 )
             }
+            Text(
+                text = stringResource(R.string.repo_title),
+                style = MaterialTheme.typography.body1
+            )
+            Box(modifier = Modifier.width(0.dp))
         }
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.size_32)))
         viewState.repoDetailsModel?.let { repoDetails ->

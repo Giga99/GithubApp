@@ -9,6 +9,7 @@ sealed class RepoDetailsEvent {
 
 sealed class RepoDetailsSideEffect {
     object NavigateBack : RepoDetailsSideEffect()
+    data class NavigateToWebView(val url: String) : RepoDetailsSideEffect()
 }
 
 data class RepoDetailsViewState(

@@ -12,6 +12,7 @@ import com.github.githubapp.common.Destinations
 import com.github.githubapp.presentation.home.HomeScreen
 import com.github.githubapp.presentation.repo_details.RepoDetailsScreen
 import com.github.githubapp.presentation.ui.theme.GithubAppTheme
+import com.github.githubapp.presentation.webview.WebViewScreen
 
 @Composable
 fun MainScreen() {
@@ -32,6 +33,10 @@ fun MainScreen() {
 
                 composable(route = Destinations.RepoDetailsScreen.fullRoute) {
                     RepoDetailsScreen(navController = navController)
+                }
+
+                composable(route = Destinations.WebViewScreen.fullRoute) {
+                    WebViewScreen(navController = navController)
                 }
             }
         }

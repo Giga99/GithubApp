@@ -21,6 +21,14 @@ sealed class Destinations(val route: String, vararg params: String) {
             )
         }
     }
+
+    object WebViewScreen : Destinations("webview", "url") {
+        const val URL = "url"
+
+        operator fun invoke(url: String): String {
+            return route.appendParams(URL to url)
+        }
+    }
 }
 
 internal fun String.appendParams(vararg params: Pair<String, Any?>): String {

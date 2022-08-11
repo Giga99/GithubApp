@@ -8,6 +8,8 @@ import com.github.githubapp.domain.usecases.GetRepoDetailsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,6 +37,10 @@ class RepoDetailsViewModel @Inject constructor(
     override fun onEvent(event: RepoDetailsEvent) {
         when (event) {
             RepoDetailsEvent.BackButtonClicked -> _sideEffects.trySend(RepoDetailsSideEffect.NavigateBack)
+            is RepoDetailsEvent.UrlClicked -> {
+                val encodedUrl = URLEncoder.encode(event.url, StandardCharsets.UTF_8.toString())
+                _sideEffects.trySend(RepoDetailsSideEffect.NavigateToWebView(encodedUrl))
+            }
         }
     }
 }
