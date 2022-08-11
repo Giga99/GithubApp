@@ -8,6 +8,7 @@
     <string name="repo_event_type_unknown">Unknown</string>
 
     <string name="users_repos">Users Repos</string>
+    <string name="no_repos">No repos for these users!</string>
 
     <string name="back_button_description">Back button</string>
     <string name="repo_title">Repository details</string>

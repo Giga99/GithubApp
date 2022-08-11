@@ -1,5 +1,6 @@
 package com.github.githubapp.presentation.home
 
+import com.github.githubapp.common.Result
 import com.github.githubapp.domain.models.RepoModel
 
 sealed class HomeEvent {
@@ -11,5 +12,5 @@ sealed class HomeSideEffect {
 }
 
 data class HomeViewState(
-    val reposList: List<RepoModel> = emptyList()
+    val reposList: Result<List<RepoModel>> = Result.Loading()
 )

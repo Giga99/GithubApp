@@ -1,5 +1,6 @@
 package com.github.githubapp.data.datasource
 
+import com.github.githubapp.common.Result
 import com.github.githubapp.data.local.ReposDao
 import com.github.githubapp.data.remote.services.UsersApiService
 import com.github.githubapp.domain.mappers.toEntity
@@ -18,14 +19,17 @@ class UsersRepositoryImpl @Inject constructor(
     private val reposDao: ReposDao
 ) : UsersRepository {
 
-    override suspend fun fetchUserRepositories(userName: String) = withContext(Dispatchers.IO) {
-        try {
-            val response = usersApiService.getUserRepos(userName).body() ?: emptyList()
-            reposDao.insertRepos(response.map { it.toEntity() })
-        } catch (e: Exception) {
-            Timber.e(e)
+    override suspend fun fetchUserRepositories(userName: String): Result<Unit> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response = usersApiService.getUserRepos(userName).body() ?: emptyList()
+                reposDao.insertRepos(response.map { it.toEntity() })
+                Result.Success(Unit)
+            } catch (e: Exception) {
+                Timber.e(e)
+                Result.Error(e.message ?: "")
+            }
         }
-    }
 
     override suspend fun getUserRepositories(userName: String): Flow<List<RepoModel>> =
         withContext(Dispatchers.IO) {
