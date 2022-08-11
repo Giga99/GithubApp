@@ -23,6 +23,7 @@ class GetAllReposUseCase @Inject constructor(
 
         jakeReposFlow.combine(infinumReposFlow) { jakeRepos, infinumRepos ->
             jakeRepos.plus(infinumRepos)
+                .sortedByDescending { it.stargazersCount + it.watchersCount + it.forksCount }
         }
     }
 }

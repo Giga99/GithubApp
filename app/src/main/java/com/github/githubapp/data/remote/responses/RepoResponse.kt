@@ -7,6 +7,9 @@ import com.squareup.moshi.JsonClass
 data class RepoResponse(
     @Json(name = "id") val id: Long,
     @Json(name = "name") val name: String,
-    @Json(name = "url") val url: String,
+    @Json(name = "html_url") val url: String,
+    @Json(name = "stargazers_count") val stargazersCount: Long,
+    @Json(name = "watchers_count") val watchersCount: Long,
+    @Json(name = "forks_count") val forksCount: Long,
     @Json(name = "owner") val repoOwner: RepoOwnerResponse
 )

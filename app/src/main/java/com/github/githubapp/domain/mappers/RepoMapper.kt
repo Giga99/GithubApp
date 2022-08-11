@@ -12,6 +12,9 @@ fun RepoResponse.toEntity(): RepoEntity =
         id = id,
         name = name,
         url = url,
+        stargazersCount = stargazersCount,
+        watchersCount = watchersCount,
+        forksCount = forksCount,
         repoOwner = repoOwner.toEntity()
     )
 
@@ -25,6 +28,9 @@ fun RepoEntity.toModel(): RepoModel =
     RepoModel(
         name = name,
         url = url,
+        stargazersCount = stargazersCount,
+        watchersCount = watchersCount,
+        forksCount = forksCount,
         repoOwner = repoOwner.toModel()
     )
 
