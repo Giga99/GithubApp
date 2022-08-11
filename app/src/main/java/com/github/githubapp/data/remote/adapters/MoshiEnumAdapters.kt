@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class RepoEventEnumAdapter @Inject constructor() : JsonAdapter<RepoEventTypeEnum>() {
     @FromJson
-    override fun fromJson(reader: JsonReader): RepoEventTypeEnum? {
+    override fun fromJson(reader: JsonReader): RepoEventTypeEnum {
         val str = reader.readJsonValue()?.toString()
         return RepoEventTypeEnum.fromJsonValue(str)
     }

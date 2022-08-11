@@ -1,6 +1,6 @@
 package com.github.githubapp.domain.models
 
 data class RepoDetailsModel(
-    private val repoModel: RepoModel,
-    private val repoEventModel: RepoEventModel?
+    val repoModel: RepoModel,
+    val repoEventModel: RepoEventModel?
 )

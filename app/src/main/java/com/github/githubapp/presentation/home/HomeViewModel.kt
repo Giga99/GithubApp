@@ -16,8 +16,7 @@ class HomeViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             getAllReposUseCase().collect { repos ->
-                println(repos)
-                setState { copy(repos) }
+                setState { copy(reposList = repos) }
             }
         }
     }

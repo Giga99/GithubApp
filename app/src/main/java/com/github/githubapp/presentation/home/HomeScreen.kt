@@ -34,8 +34,8 @@ fun HomeScreen(
                 is HomeSideEffect.NavigateToRepoDetailsScreen -> {
                     navController.navigate(
                         Destinations.RepoDetailsScreen(
-                            sideEffect.ownerName,
-                            sideEffect.repoName
+                            ownerName = sideEffect.ownerName,
+                            repoName = sideEffect.repoName
                         )
                     )
                 }

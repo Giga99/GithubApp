@@ -6,6 +6,7 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class RepoEventResponse(
+    @Json(name = "id") val id: String,
     @Json(name = "type") val type: RepoEventTypeEnum,
     @Json(name = "actor") val repoEventActor: RepoEventActorResponse
 )

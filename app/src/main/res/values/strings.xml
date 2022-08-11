@@ -8,4 +8,12 @@
     <string name="repo_event_type_unknown">Unknown</string>
 
     <string name="users_repos">Users Repos</string>
+
+    <string name="back_button_description">Back button</string>
+    <string name="repo_url">Repository url:</string>
+    <string name="owner">Owner</string>
+    <string name="last_event">Last event</string>
+    <string name="event_type">Type: </string>
+    <string name="last_event_actor">Actor</string>
+    <string name="no_events">This repository doesn`t have any event</string>
 </resources>

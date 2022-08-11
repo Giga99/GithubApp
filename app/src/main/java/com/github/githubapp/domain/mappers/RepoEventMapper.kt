@@ -7,6 +7,7 @@ import com.github.githubapp.domain.models.RepoEventModel
 
 fun RepoEventResponse.toModel(): RepoEventModel =
     RepoEventModel(
+        id = id,
         type = type,
         eventActor = repoEventActor.toModel()
     )

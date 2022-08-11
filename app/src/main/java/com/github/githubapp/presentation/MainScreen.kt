@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.github.githubapp.common.Destinations
 import com.github.githubapp.presentation.home.HomeScreen
+import com.github.githubapp.presentation.repo_details.RepoDetailsScreen
 import com.github.githubapp.presentation.ui.theme.GithubAppTheme
 
 @Composable
@@ -30,7 +31,7 @@ fun MainScreen() {
                 }
 
                 composable(route = Destinations.RepoDetailsScreen.fullRoute) {
-
+                    RepoDetailsScreen(navController = navController)
                 }
             }
         }
