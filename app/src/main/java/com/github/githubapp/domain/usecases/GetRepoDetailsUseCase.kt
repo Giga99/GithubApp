@@ -22,7 +22,7 @@ class GetRepoDetailsUseCase @Inject constructor(
             val repoFlow = reposRepository.getRepo(ownerName, repoName)
             val repoEvent = reposRepository.getRepoEvents(ownerName, repoName)
             if (repoEvent is Result.Error)
-                flowOf<Result<RepoDetailsModel>>(Result.Error(repoEvent.message ?: ""))
+                return@withContext flowOf<Result<RepoDetailsModel>>(Result.Error(repoEvent.message ?: ""))
 
             repoFlow.map { Result.Success(RepoDetailsModel(it, repoEvent.data?.firstOrNull())) }
         }
