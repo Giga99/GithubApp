@@ -18,7 +18,7 @@ class GetReposForTheUserUseCase @Inject constructor(
         withContext(Dispatchers.IO) {
             val result = usersRepository.fetchUserRepositories(username)
             if (result is Result.Error)
-                flowOf<Result<List<RepoModel>>>(Result.Error(result.message ?: ""))
+               return@withContext flowOf<Result<List<RepoModel>>>(Result.Error(result.message ?: ""))
 
             val reposFlow = usersRepository.getUserRepositories(username)
 
